@@ -42,7 +42,7 @@
     <div class="wrap">
         <div class="header">
             <div class="inner">
-                <h1 class="title">질문 체크리스트 <span class="sub-title" data-interview-date="interviewDay"></span></h1>
+                <h1 class="title">면접 질문 체크리스트 <span class="sub-title" data-interview-date="interviewDay"></span></h1>
             </div>
         </div>
         <div class="container">
@@ -50,6 +50,7 @@
 
                 <button type="button" class="print-btn" onclick="return printPage();">Print List</button>
 
+                <!-- 리스트 프린트 영역 -->
                 <div id="print">
                     <div class="desc-box">
                         <h2 class="title">공통 질문 </h2>
@@ -57,17 +58,18 @@
                     </div>
 
                     <div class="desc-box">
-                        <h2 class="title">개별 추가 질문 <span class="sub-title">(대상자 : <span class="interviwer-name" data-interview-name="interviewerName"></span>님)</span></h2>
+                        <h2 class="title">개별 추가 질문 <span class="sub-title">(면접자 : <span class="interviwer-name" data-interview-name="interviewerName"></span>님)</span></h2>
                         <ul class="dash-list" data-list-draw="user-survey"></ul>
                     </div>
                 </div>
+                <!-- //리스트 프린트 영역 -->
             </div>
         </div>
     </div>
 
-    <!-- 리스트 프린트 영역 -->
+
    </div>
-    <!-- //리스트 프린트 영역 -->
+
 
     <script type="text/javascript">
     var initBodyHtml ;
