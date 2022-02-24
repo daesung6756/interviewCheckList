@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>질문 체크 리스트</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <Style>
+        html, body {color:#333;margin:0;}
+        html {font-size:20px;}
+        body {font-size:1rem}
+        ul, ol{list-style: none;padding:0;}
+        h1,h2,h3,h4,h5,h6 {margin:0;}
+        h1 {font-size:1.6rem}
+        h2 {font-size:1.2rem}
+        label {cursor:pointer;vertical-align: top;}
+        .header {background:#333;color:#efefef;padding:0 1rem}
+        .header .inner{max-width:1024px;margin:0 auto;padding:2.5rem 0;}
+        .container {background:#efefef;padding:2.5rem 1rem;}
+        .container .content{position:relative;max-width:1024px;margin:0 auto;padding:1rem;border:1px solid #ddd;background:#fff;-webkit-box-shadow: .5rem .5rem .5rem rgba(0,0,0,.1);box-shadow: .5rem .5rem .5rem rgba(0,0,0,.1)}
+        .container .content .print-btn {position:absolute;right:0;bottom:100%;margin-bottom:10px;background: #dc5e5e;color:#fff;border:0;padding:.3rem .3rem;}
+        .title .sub-title {font-size:.8rem;color:#777;vertical-align: baseline}
+
+        .dash-list li{position:relative;padding-left:.6rem;}
+        .dash-list li:before {content:"";position:absolute;top:.45rem;left:0; width:4px;height:1px;background:#333;}
+
+        .desc-box .dash-list li {font-size:.8rem;line-height:.95rem;padding:.5rem 8rem .5rem .6rem;border-bottom:1px dotted #aaa;}
+        .desc-box .dash-list li:hover {background:#efefef;}
+        .desc-box .dash-list li.is-active {background: #fff8d0}
+        .desc-box .dash-list li:before {top:.9rem;}
+        .desc-box .dash-list li >.checkbox {position:absolute;top:50%;right:0;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%);line-height:.95rem;}
+
+        .desc-box + .desc-box {margin-top:50px;}
+
+        @media screen and (max-width: 1280px) {html {font-size:17px}}
+        @media screen and (max-width: 768px) {html {font-size:16px}}
+        @media print {
+            .desc-box .dash-list li >.checkbox {display:none;}
+        }
+    </Style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="header">
+            <div class="inner">
+                <h1 class="title">질문 체크리스트 <span class="sub-title" data-interview-date="interviewDay"></span></h1>
+            </div>
+        </div>
+        <div class="container">
+            <div class="content">
+
+                <button type="button" class="print-btn" onclick="return printPage();">Print List</button>
+
+                <div id="print">
+                    <div class="desc-box">
+                        <h2 class="title">공통 질문 </h2>
+                        <ul class="dash-list" data-list-draw="common-survey"></ul>
+                    </div>
+
+                    <div class="desc-box">
+                        <h2 class="title">개별 추가 질문 <span class="sub-title">(대상자 : <span class="interviwer-name" data-interview-name="interviewerName"></span>님)</span></h2>
+                        <ul class="dash-list" data-list-draw="user-survey"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 리스트 프린트 영역 -->
+   </div>
+    <!-- //리스트 프린트 영역 -->
+
+    <script type="text/javascript">
+    var initBodyHtml ;
+     function printPage() {
+         window.print()
+     }
+     function printBefore() {
+         initBodyHtml = document.body.innerHTML;
+         document.body.innerHTML = document.getElementById("print").innerHTML;
+     }
+     function printAfter () {
+         document.body.innerHTML = initBodyHtml;
+     }
+     window.onbeforeprint = printBefore;
+     window.onafterprint = printAfter;
+
+    // 면접자 정보
+    var interviewerInfo = {
+        date: "(날짜 삽입)",
+        name:"이름"
+    };
+
+    // 공통 면접 질문
+    var commonQuestionArray = [
+        '공통 질문들',
+        '공통 질문들',
+        '공통 질문들',
+        '공통 질문들',
+        '공통 질문들',
+        '공통 질문들',
+    ]
+
+    //개별 추가 질문
+    var interviewerQuestionArray = [
+        '개별 질문들',
+        '개별 질문들',
+        '개별 질문들',
+        '개별 질문들',
+        '개별 질문들',
+    ]
+
+    var checkedActivateArray = [];// 체크 완료 된 배열
+
+    // 면접 정보 그리기
+    function interviewerInfoDraw ( date, name ){
+        var dateEl = document.querySelector("[data-interview-date='" + date +"']");
+        var nameEl = document.querySelector("[data-interview-name='" + name +"']");
+        dateEl.innerHTML = interviewerInfo.date;
+        nameEl.innerHTML = interviewerInfo.name;
+    }
+
+    // 체크리스트 항목 그리기
+    var checkListDraw = {
+        init : function ( element , dataName ) {
+            this.events( element , dataName );
+        },
+        events : function ( element , datas ) {
+            var list = document.querySelector("[data-list-draw='" + element + "']");
+            for (var i = 0; i < datas.length ; i++) {
+                var li = document.createElement("li");
+                var span = document.createElement("span");
+
+                span.classList.add("checkbox");
+                span.innerHTML = '<input type="checkbox" id="' + (element + i) + '"><label for="' + (element + i) + '" >확인</label>';
+
+                li.innerHTML = datas[i];
+                li.appendChild(span);
+                list.appendChild(li);
+            }
+
+        }
+    }
+
+    //체크 완료 된 li 하이라이트 추가
+    var checkboxHighlight = {
+        init : function () {
+            var checkboxGroup = document.querySelectorAll("span.checkbox");
+            if(checkboxGroup.length > 0){
+                this.events( checkboxGroup );
+            }
+        },
+        events: function ( elements ) {
+            for (var i = 0; i < elements.length ; i++) {
+                elements[i].onchange = function () {
+                    var input = this.childNodes[0];
+                    var li = this.parentNode;
+                    var className = "is-active";
+
+                    if(input.checked){
+                        li.classList.add(className);
+                        checkedActivateArray.push(input.getAttribute("id"))
+                        console.log(checkedActivateArray)
+                    } else {
+                        li.classList.remove(className);
+                        for (var j = 0; j < checkedActivateArray.length ; j++) {
+                            if (checkedActivateArray[j] === input.getAttribute("id")) {
+                                checkedActivateArray.splice(j, 1);
+                            }
+                        }
+                        console.log(checkedActivateArray)
+                    }
+                }
+            }
+        }
+    }
+
+    checkListDraw.init("common-survey", commonQuestionArray)// 데이터명 , 배열
+    checkListDraw.init("user-survey", interviewerQuestionArray)// 데이터명 , 배열
+    checkboxHighlight.init();
+    interviewerInfoDraw("interviewDay", "interviewerName") // 날짜 데이터명 , 이름 데이터명
+
+</script>
+</body>
+</html>
