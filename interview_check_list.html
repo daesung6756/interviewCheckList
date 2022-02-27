@@ -18,7 +18,9 @@
         .container {background:#efefef;padding:2.5rem 1rem;}
         .container .content{position:relative;max-width:1024px;margin:0 auto;padding:1rem;border:1px solid #ddd;background:#fff;-webkit-box-shadow: .5rem .5rem .5rem rgba(0,0,0,.1);box-shadow: .5rem .5rem .5rem rgba(0,0,0,.1)}
         .container .content .print-btn {position:absolute;right:0;bottom:100%;margin-bottom:10px;background: #dc5e5e;color:#fff;border:0;padding:.3rem .3rem;}
+        .title {position:relative;padding-right:2rem}
         .title .sub-title {font-size:.8rem;color:#777;vertical-align: baseline}
+        .title .title-side {position:absolute;top:50%;right:0;transform:translateY(-50%);font-size:.7rem;color:#777;vertical-align: baseline}
 
         .dash-list li{position:relative;padding-left:.6rem;}
         .dash-list li:before {content:"";position:absolute;top:.45rem;left:0; width:4px;height:1px;background:#333;}
@@ -53,13 +55,13 @@
                 <!-- 리스트 프린트 영역 -->
                 <div id="print">
                     <div class="desc-box">
-                        <h2 class="title">공통 질문 </h2>
-                        <ul class="dash-list" data-list-draw="common-survey"></ul>
+                        <h2 class="title">공통 질문 <span class="title-side" data-list-count="common-question"></span></h2>
+                        <ul class="dash-list" data-list-draw="common-question"></ul>
                     </div>
 
                     <div class="desc-box">
-                        <h2 class="title">개별 추가 질문 <span class="sub-title">(면접자 : <span class="interviwer-name" data-interview-name="interviewerName"></span>님)</span></h2>
-                        <ul class="dash-list" data-list-draw="user-survey"></ul>
+                        <h2 class="title">개별 추가 질문 <span class="sub-title">(면접자 : <span class="interviwer-name" data-interview-name="interviewerName"></span>님)</span><span class="title-side" data-list-count="user-question"></span></h2>
+                        <ul class="dash-list" data-list-draw="user-question"></ul>
                     </div>
                 </div>
                 <!-- //리스트 프린트 영역 -->
@@ -102,7 +104,7 @@
         '공통 질문들',
     ]
 
-    //개별 추가 질문
+    // 개별 추가 질문
     var interviewerQuestionArray = [
         '개별 질문들',
         '개별 질문들',
@@ -128,6 +130,10 @@
         },
         events : function ( element , datas ) {
             var list = document.querySelector("[data-list-draw='" + element + "']");
+            var count = document.querySelector("[data-list-count='" + element + "']");
+
+            count.innerHTML = "질문수: " + datas.length;
+
             for (var i = 0; i < datas.length ; i++) {
                 var li = document.createElement("li");
                 var span = document.createElement("span");
@@ -176,8 +182,8 @@
         }
     }
 
-    checkListDraw.init("common-survey", commonQuestionArray)// 데이터명 , 배열
-    checkListDraw.init("user-survey", interviewerQuestionArray)// 데이터명 , 배열
+    checkListDraw.init("common-question", commonQuestionArray)// 데이터명 , 배열
+    checkListDraw.init("user-question", interviewerQuestionArray)// 데이터명 , 배열
     checkboxHighlight.init();
     interviewerInfoDraw("interviewDay", "interviewerName") // 날짜 데이터명 , 이름 데이터명
 
